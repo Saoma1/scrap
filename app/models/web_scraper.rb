@@ -10,9 +10,8 @@ class WebScraper < ApplicationRecord
 
     # Selenium::WebDriver::Firefox::Binary.path=ENV['FIREFOX_BIN']
     Selenium::WebDriver::Firefox::Service.driver_path=ENV['GECKODRIVER_PATH']
-
     @driver = Selenium::WebDriver.for :firefox, options: options
-    @wait = Selenium::WebDriver::Wait.new(timeout: 2) # seconds
+
     @base_url = 'https://1337x.to'
     @start_url = 'https://1337x.to/cat/Movies/'
   end
@@ -28,12 +27,13 @@ class WebScraper < ApplicationRecord
     catch(:done) do
       loop do
         @driver.get "#{@start_url}#{start_page}/"
+        puts
+        puts "right after site change, page: #{start_page}"
         response = Nokogiri::HTML(@driver.page_source)
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
           date = app.css('td.coll-date').text.to_s
           puts
-          puts "date: #{date}"
           date = DateTime.parse(date)
 
           throw(:done, true) if date < yesterday
@@ -41,6 +41,7 @@ class WebScraper < ApplicationRecord
           @driver.get (@base_url + alt_href)
           main_torrent_page = Nokogiri::HTML(@driver.page_source)
           save(main_torrent_page, alt_href)
+          puts "date: #{date}"
           puts "item: number #{nr}, on page #{start_page}"
           puts "system mem: #{`ps -o rss #{$$}`.strip.split.last.to_i/1024}MB"
           sleep(1)
@@ -81,8 +82,6 @@ class WebScraper < ApplicationRecord
       # item[:release_year] = 'not yet'
       # item[:title] = main_torrent_page.css('div.box-info-heading h1').text
     end
-    # puts `ps -o rss #{$$}`.strip.split.last.to_i
-    # puts 'RAM USAGE: ' + `pmap #{Process.pid} | tail -1`[10,40].strip
-    # Torrent.create(item)
+    puts "saved #{alt_href}"
   end
 end
