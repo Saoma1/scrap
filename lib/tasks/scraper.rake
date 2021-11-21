@@ -9,5 +9,5 @@ namespace :scraper do
 end
 
 #  run with:
-# bundle exec rake scraping:current_environment
-# rake scraping:current_environment
+# bundle exec rake scraper:execute
+# rake scraper:execute
