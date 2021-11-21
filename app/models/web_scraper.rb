@@ -1,7 +1,5 @@
 class WebScraper < ApplicationRecord
   def init_options
-    Selenium::WebDriver::Firefox::Binary.path=ENV['FIREFOX_BIN']
-    Selenium::WebDriver::Firefox::Service.driver_path=ENV['GECKODRIVER_PATH']
 
     options = Selenium::WebDriver::Firefox::Options.new
     options.add_argument('--headless')
@@ -10,6 +8,8 @@ class WebScraper < ApplicationRecord
     # options.binary = ENV['GOOGLE_CHROME_PATH']
     options.binary = ENV['FIREFOX_BIN']
 
+    # Selenium::WebDriver::Firefox::Binary.path=ENV['FIREFOX_BIN']
+    Selenium::WebDriver::Firefox::Service.driver_path=ENV['GECKODRIVER_PATH']
 
     @driver = Selenium::WebDriver.for :firefox, options: options
     @wait = Selenium::WebDriver::Wait.new(timeout: 2) # seconds
