@@ -32,21 +32,21 @@ class WebScraper < ApplicationRecord
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
           date = app.css('td.coll-date').text.to_s
+          puts
+          puts "date: #{date}"
           date = DateTime.parse(date)
 
           throw(:done, true) if date < yesterday
 
           @driver.get (@base_url + alt_href)
           main_torrent_page = Nokogiri::HTML(@driver.page_source)
-          puts "from model"
           save(main_torrent_page, alt_href)
-          puts "sleep 2 seconds"
-          puts "on page #{start_page}"
-          puts "on is #{nr}"
-          puts `ps -o rss #{$$}`.strip.split.last.to_i
+          puts "item: number #{nr}, on page #{start_page}"
+          puts "system mem: #{`ps -o rss #{$$}`.strip.split.last.to_i/1024}MB"
           sleep(1)
           nr += 1
         end
+        nr = 1
         start_page += 1
       end
     end
