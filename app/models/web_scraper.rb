@@ -22,6 +22,7 @@ class WebScraper < ApplicationRecord
     start_page = 8
     today = DateTime.now
     yesterday = (today - 1)
+    nr = 1
 
 
     catch(:done) do
@@ -41,8 +42,10 @@ class WebScraper < ApplicationRecord
           save(main_torrent_page, alt_href)
           puts "sleep 2 seconds"
           puts "on page #{start_page}"
+          puts "on is #{nr}"
           puts `ps -o rss #{$$}`.strip.split.last.to_i
           sleep(1)
+          nr += 1
         end
         start_page += 1
       end
