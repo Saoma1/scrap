@@ -27,10 +27,11 @@ class WebScraper < ApplicationRecord
     catch(:done) do
       loop do
         @driver.get "#{@start_url}#{start_page}/"
+        # wait.until { @driver.find_element(id: "foo") }
         puts
         puts "right after site change, page: #{start_page}"
         response = Nokogiri::HTML(@driver.page_source)
-        sleep(2)
+        sleep(7)
         puts response
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
