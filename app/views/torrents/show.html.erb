@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Title:</strong>
+  <%= @torrent.title %>
+</p>
+
+<p>
+  <strong>Release year:</strong>
+  <%= @torrent.release_year %>
+</p>
+
+<p>
+  <strong>Url:</strong>
+  <%= @torrent.url %>
+</p>
+
+<p>
+  <strong>Main:</strong>
+  <%= @torrent.main %>
+</p>
+
+<%= link_to 'Edit', edit_torrent_path(@torrent) %> |
+<%= link_to 'Back', torrents_path %>
