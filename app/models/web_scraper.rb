@@ -1,10 +1,11 @@
 class WebScraper < ApplicationRecord
   def selenium_options
     options = Selenium::WebDriver::Firefox::Options.new
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument("--enable-javascript")
+    options.add_argument("window-size=1400,900")
     options.binary = ENV['FIREFOX_BIN']
     options
   end
@@ -14,7 +15,6 @@ class WebScraper < ApplicationRecord
   end
 
   def init_options
-    # Selenium::WebDriver::Firefox::Binary.path=ENV['FIREFOX_BIN']
     Selenium::WebDriver::Firefox::Service.driver_path=ENV['GECKODRIVER_PATH']
     caps = [
       selenium_options,
