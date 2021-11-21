@@ -32,9 +32,10 @@ class WebScraper < ApplicationRecord
         response = Nokogiri::HTML(@driver.page_source)
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
-          date = app.css('td.coll-date').text.to_s
+          date_before = app.css('td.coll-date').text.to_s
           puts
-          date = DateTime.parse(date)
+          puts "date before conversion: #{date_before}"
+          date = DateTime.parse(date_before)
 
           throw(:done, true) if date < yesterday
 
