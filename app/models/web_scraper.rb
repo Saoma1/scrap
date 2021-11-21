@@ -30,6 +30,8 @@ class WebScraper < ApplicationRecord
         puts
         puts "right after site change, page: #{start_page}"
         response = Nokogiri::HTML(@driver.page_source)
+        sleep(2)
+        puts response
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
           date_before = app.css('td.coll-date').text.to_s
