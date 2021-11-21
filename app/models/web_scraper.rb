@@ -1,16 +1,26 @@
 class WebScraper < ApplicationRecord
-  def init_options
-
+  def selenium_options
     options = Selenium::WebDriver::Firefox::Options.new
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
-    # options.binary = ENV['GOOGLE_CHROME_PATH']
+    options.add_argument("--enable-javascript")
     options.binary = ENV['FIREFOX_BIN']
+    options
+  end
 
+  def selenium_profile
+    profile = Selenium::WebDriver::Firefox::Profile.new
+  end
+
+  def init_options
     # Selenium::WebDriver::Firefox::Binary.path=ENV['FIREFOX_BIN']
     Selenium::WebDriver::Firefox::Service.driver_path=ENV['GECKODRIVER_PATH']
-    @driver = Selenium::WebDriver.for :firefox, options: options
+    caps = [
+      selenium_options,
+    ]
+
+    @driver = Selenium::WebDriver.for(:firefox, capabilities: caps)
 
     @base_url = 'https://1337x.to'
     @start_url = 'https://1337x.to/cat/Movies/'
