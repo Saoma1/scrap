@@ -18,7 +18,7 @@ class WebScraper < ApplicationRecord
 
   def parse
     init_options
-    start_page = 8
+    start_page = 7
     today = DateTime.now
     yesterday = (today - 1)
     nr = 1
@@ -61,31 +61,32 @@ class WebScraper < ApplicationRecord
   private
 
   def save(main_torrent_page, alt_href)
-    # item = {}
+    item = {}
     if main_torrent_page.css('div#mCSB_1_container').any?
       a = main_torrent_page.css('div#mCSB_1_container h3 a')
-      Torrent.create(
-        title: a.text,
-        url: @base_url + a.attr('href').to_s,
-        main: true,
-        release_year: a.attr('href').to_s[-5..-2],
-      )
-      # item[:main] = true
-      # item[:url] = @base_url + a.attr('href').to_s
-      # item[:title] = a.text
-      # item[:release_year] = a.attr('href').to_s[-5..-2]
+      item[:title] = a.text
+      item[:release_year] = a.attr('href').to_s[-5..-2]
+      item[:url] = @base_url + a.attr('href').to_s
+      item[:main] = true
+      # Torrent.create(
+      #   title: a.text,
+      #   url: @base_url + a.attr('href').to_s,
+      #   main: true,
+      #   release_year: a.attr('href').to_s[-5..-2],
+      # )
     else
-      Torrent.create(
-        title: main_torrent_page.css('div.box-info-heading h1').text,
-        url: @base_url + alt_href.to_s,
-        main: false,
-        release_year: 'not yet',
-      )
-      # item[:main] = false
-      # item[:url] = @base_url + alt_href.to_s
-      # item[:release_year] = 'not yet'
-      # item[:title] = main_torrent_page.css('div.box-info-heading h1').text
+      item[:title] = main_torrent_page.css('div.box-info-heading h1').text
+      item[:release_year] = 'not yet'
+      item[:url] = @base_url + alt_href.to_s
+      item[:main] = false
+      # Torrent.create(
+        #   title: main_torrent_page.css('div.box-info-heading h1').text,
+        #   url: @base_url + alt_href.to_s,
+        #   main: false,
+        #   release_year: 'not yet',
+        # )
     end
-    puts "saved #{alt_href}"
+    Torrent.create(item)
+    puts "saved #{item}"
   end
 end
