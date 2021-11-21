@@ -1,7 +1,7 @@
 class WebScraper < ApplicationRecord
   def selenium_options
     options = Selenium::WebDriver::Firefox::Options.new
-    # options.add_argument('--headless')
+    options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument("--enable-javascript")
@@ -41,6 +41,7 @@ class WebScraper < ApplicationRecord
         puts
         puts "right after site change, page: #{start_page}"
         response = Nokogiri::HTML(@driver.page_source)
+        puts response
         response.css('tbody tr').each do |app|
           alt_href = app.css('td.name a:nth-of-type(2)').attr('href') #on the main page
           date_before = app.css('td.coll-date').text.to_s
