@@ -44,6 +44,8 @@ class WebScraper < ApplicationRecord
 
           @driver.get (@base_url + alt_href)
           main_torrent_page = Nokogiri::HTML(@driver.page_source)
+          puts main_torrent_page
+          sleep(7)
           save(main_torrent_page, alt_href)
           puts "date: #{date}"
           puts "item: number #{nr}, on page #{start_page}"
@@ -86,7 +88,12 @@ class WebScraper < ApplicationRecord
         #   release_year: 'not yet',
         # )
     end
-    Torrent.create(item)
+    begin
+      Torrent.create!(item)
+    rescue
+      $stdout.write("\e[32mDone.\e[0m\n")
+      puts "Torrent Exists!"
+    end
     puts "saved #{item}"
   end
 end
